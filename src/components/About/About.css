@@ -1,0 +1,41 @@
+/*=== About css ===*/
+.about{
+    padding: 80px 0;
+}
+
+.about__content{
+    display: flex;
+    gap: 56px;
+}
+
+.about__image_box{
+    width: 464px;
+    height: 464px;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+.about__image{
+    width: 100%;
+}
+
+.about__info_box{
+    margin-top: 50px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.about__title{
+    margin: 0;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 46px;
+    color: #1A1B22;
+}
+
+.about__text{
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    margin-top: 24px;
+}
