@@ -47,3 +47,41 @@
     padding: 0;
     list-style: none;
 }
+
+
+@media screen and (max-width:768px){
+    .footer {
+        padding: 4px 0;
+    }
+    .footer__content{
+        justify-content: space-evenly;
+    }
+    .footer__menu_item{
+        text-align: center;
+    }
+}
+
+@media screen and (max-width:425px){
+    .footer {
+        padding: 20px 0;
+    }
+    .footer__menu{
+        display: block;
+        margin: 0;
+    }
+    .footer__content{
+        flex-flow: column-reverse;
+    }
+    .footer__menu_item{
+        text-align: left;
+    }
+    .footer__menu_item:last-child{
+        margin-top: 25px;
+    }
+    .footer__social_links{
+        margin: 0;
+    }
+    .footer__copyright_text{
+        margin-top: 38px;
+    }
+}

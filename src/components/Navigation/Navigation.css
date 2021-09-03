@@ -2,12 +2,13 @@
 .nav{
     background: rgba(196, 196, 196, 0.01);
     box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
-    padding: 19px 15px 13px 15px;
+    padding: 19px 0 13px 0;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     box-sizing: border-box;
+    transition: all .5s ease-in-out;
 }
 
 .nav__content{
@@ -23,12 +24,15 @@
     line-height: 24px;
     color: #fff;
     text-decoration: none;
+    position: relative;
+    z-index: 2;
 }
 
 .nav__menu_box{
     display: grid;
     grid-template-columns: auto auto;
     gap: 34px;
+    box-sizing: border-box;
 }
 
 .nav__menu{
@@ -100,6 +104,35 @@
     margin-bottom: -2px;
 }
 
+.mobileMenu{
+    display: none;
+    width: 16px;
+    position: relative;
+    z-index: 2;
+    padding-right: 5px;
+}
+.mobileMenu__bar{
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    height: 2px;
+    background-color: #fff;
+    transition: all .3s ease-in-out;
+}
+.mobileMenu__bar:last-child{
+    margin-top: 5px;
+}
+.nav.mobileMenu__active{
+    background: #1A1B22;
+}
+.nav.mobileMenu__active .mobileMenu__bar{
+    transform: rotate(45deg);
+    margin-bottom: 3px;
+}
+.nav.mobileMenu__active .mobileMenu__bar:last-child{
+    transform: rotate(-45deg);
+    margin-top: -5px;
+}
 
 
 .nav.nav__light{
@@ -118,4 +151,90 @@
 .nav.nav__light .nav__signIn_button{
     border-color: #1A1B22;
     color: #1A1B22;
+}
+
+.nav.nav__light .mobileMenu__bar{
+    background-color: #1A1B22;
+}
+.nav.nav__light.mobileMenu__active .mobileMenu__bar{
+    background-color: #fff;
+}
+.nav.nav__light.mobileMenu__active .logo{
+    color: #fff;
+}
+.nav.nav__light.mobileMenu__active .nav__link{
+    color: #fff;
+}
+.nav.nav__light.mobileMenu__active .nav__signOut_button,
+.nav.nav__light.mobileMenu__active .nav__signIn_button{
+    color: #fff;
+    border-color: #fff;
+}
+
+@media screen and (max-width:768px){
+    .nav__signIn_button {
+        height: 40px;
+        width: 152px;
+        padding: 8px 0;
+    }
+    .nav__menu{
+        margin: 0;
+    }
+    .nav__link.active:after{
+        bottom: -22px;
+    }
+    .nav__signOut_button{
+        height: 40px;
+        font-size: 16px;
+        padding: 8px 13px;
+    }
+    .nav__link {
+        padding: 0 24px;
+    }
+    .nav__menu_box{
+        gap: 16px;
+    }
+}
+
+@media screen and (max-width:425px){
+    .mobileMenu{
+        display: block;
+    }
+    .nav__menu_box{
+        position: absolute;
+        width: 100%;
+        top: 56px;
+        left: 0;
+        display: block;
+        background: #1A1B22;
+        padding: 16px 16px 24px 16px;
+        transform: translateY(-350px);
+        opacity: 0;
+        transition: all .5s ease-in-out;
+    }
+    .nav.mobileMenu__active .nav__menu_box{
+        transform: translateY(0);
+        opacity: 1;
+    }
+    .nav__link.active:after{
+        display: none;
+    }
+    .nav__menu{
+        display: block;
+    }
+    .nav__link{
+        line-height: 56px;
+        display: block;
+        padding: 0;
+    }
+    .nav__signIn_button,.nav__signOut_button{
+        height: 56px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 22px;
+    }
+
+    .nav.popupOpened .nav__content{
+        opacity: 0;
+    }
 }

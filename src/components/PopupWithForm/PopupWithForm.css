@@ -21,6 +21,7 @@
     font-size: 24px;
     line-height: 28px;
     color: #1A1B22;
+    margin: 0;
 }
 
 .popup__label{
@@ -115,8 +116,88 @@
     background-position: center;
     background-color: transparent;
     border: none;
+    cursor: pointer;
 }
 
 .button_role_close:hover{
     opacity: .6;
+}
+
+
+.popup__submit_button{
+    background: #E6E8EB;
+    border-radius: 100px;
+    padding: 20px;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    color: #B6BCBF;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    margin-top: 40px;
+    cursor: pointer;
+}
+
+.popup__submit_button.active{
+    background: #2F71E5;
+    color: #ffffff;
+    border-radius: 100px;
+    transition: all .3s ease-in-out;
+}
+
+.popup__submit_button.active:hover{
+    box-shadow: 0 5px 15px rgba(14, 26, 57, 0.2);
+}
+
+.popup__submit_button:disabled{
+    cursor: not-allowed;
+}
+
+.popup__or_text{
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #000000;
+    margin: 0;
+    margin-top: 15px;
+}
+
+.popup__or_link{
+    text-decoration: none;
+    color: #2F71E5;
+    cursor: pointer;
+}
+.popup__signIn_link{
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    color: #2F71E5;
+    margin: 0;
+    margin-top: 14px;
+    cursor: pointer;
+}
+
+@media screen and (max-width:425px){
+    .popup__body-with-form {
+        height: calc(100vh - 56px);
+        top: 56px;
+        left: 0;
+        transform: inherit;
+        border-radius: 10px 10px 0 0;
+        padding: 16px 17px;
+    }
+    .button_role_close{
+        top: -50px;
+        right: 0;
+    }
+    .popup_type_successReg .popup__title{
+        margin-top: 150px;
+    }
 }

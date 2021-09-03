@@ -3,23 +3,25 @@ import PopupWithForm from "../PopupWithForm/PopupWithForm";
 import Input from "../Input/Input";
 import EmailValidator from "../Validator/EmailValidator";
 import PasswordValidator from "../Validator/PasswordValidator";
+import UsernameValidator from "../Validator/UsernameValidator";
 
-function SignIn(props) {
+function SignUp(props) {
     const [email,setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [username, setUsername] = React.useState('');
     const [activeSubmit, setActiveSubmit] = React.useState(false);
     const [validationErrors, setValidationErrors] = React.useState({});
 
     React.useEffect(()=>{
         setEmail('');
         setPassword('');
+        setUsername('');
         setActiveSubmit(false);
     },[props.isOpen]);
 
     React.useEffect(()=>{
-        if (!validationErrors.email && !validationErrors.password && email !== '' && password !== ''){
+        if (!validationErrors.email && !validationErrors.password && !validationErrors.username && email !== '' && password !== '' && username !== ''){
             props.openSuccess();
-            props.onClose();
         }else{
             setActiveSubmit(false);
         }
@@ -27,19 +29,30 @@ function SignIn(props) {
 
     function handleEmailChange(e) {
         setEmail(e.target.value);
+        activeSubmitFun();
     }
 
     function handlePasswordChange(e) {
         setPassword(e.target.value);
+        activeSubmitFun();
+    }
+
+    function handleUsernameChange(e) {
+        setUsername(e.target.value);
+        activeSubmitFun();
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-        setValidationErrors({email: EmailValidator({email}), password: PasswordValidator({password})});
+        setValidationErrors({
+            email: EmailValidator({email}),
+            password: PasswordValidator({password}),
+            username: UsernameValidator({username})
+        });
     }
 
     function activeSubmitFun() {
-        if (email !== '' && password !== ''){
+        if (email !== '' && password !== '' && username !== ''){
             setActiveSubmit(true);
             return;
         }
@@ -48,15 +61,15 @@ function SignIn(props) {
 
     return (
         <PopupWithForm
-            name='signIn'
-            title='Sign in'
-            submitButtonText='Sign in'
+            name='signUp'
+            title='Sign up'
+            submitButtonText='Sign Up'
             isOpen={props.isOpen}
             onSubmit={handleSubmit}
             onClose={props.onClose}
             orTextClick={props.openSignUp}
             activeSubmit={activeSubmit}
-            orText='Sign up'>
+            orText='Sign in'>
             <label htmlFor="email" className="popup__label">Email</label>
             <Input
                 value={email}
@@ -64,7 +77,7 @@ function SignIn(props) {
                 type="email"
                 name="email"
                 placeholder="Enter email"
-                id="email"
+                id="reg_email"
                 errors={validationErrors.email}
                 handleChange={handleEmailChange}
                 handleKeyUp={activeSubmitFun}
@@ -76,13 +89,25 @@ function SignIn(props) {
                 type="password"
                 name="password"
                 placeholder="Enter password"
-                id="password"
+                id="reg_password"
                 errors={validationErrors.password}
                 handleChange={handlePasswordChange}
+                handleKeyUp={activeSubmitFun}
+                />
+            <label htmlFor="userName" className="popup__label">Username</label>
+            <Input
+                value={username}
+                className="popup__input"
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                id="password"
+                errors={validationErrors.username}
+                handleChange={handleUsernameChange}
                 handleKeyUp={activeSubmitFun}
                 />
         </PopupWithForm>
     );
 }
 
-export default SignIn;
+export default SignUp;

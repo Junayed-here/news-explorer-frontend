@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, useHistory} from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header';
 import Navigation from '../Navigation/Navigation';
@@ -9,6 +9,8 @@ import SearchForm from '../SearchForm/SearchForm';
 import NewsCardList from '../NewsCardList/NewsCardList';
 import UserInfo from '../UserInfo/UserInfo';
 import SignIn from '../SignIn/SignIn';
+import SignUp from '../SignUp/SignUp';
+import SuccessReg from '../SuccessReg/SuccessReg';
 import cardImg_1 from "../../images/cards_1.jpg";
 import cardImg_2 from "../../images/cards_2.jpg";
 import cardImg_3 from "../../images/cards_3.jpg";
@@ -58,24 +60,67 @@ const data = [
     }
 ];
 function App() {
+    const   history = useHistory();
     const   [loggedIn, setLoggedIn] = React.useState(false);
     const   [searchKey, setSearchKey] = React.useState('');
+    const   [isSignInPopupOpen, setIsSignInPopupOpen] = React.useState(false);
+    const   [isSignUpPopupOpen, setIsSignUpPopupOpen] = React.useState(false);
+    const   [isSuccessRegUpPopupOpen, setIsSuccessRegUpPopupOpen] = React.useState(false);
+    const   [activeMenu, setActiveMenu] = React.useState(false);
 
     React.useEffect(()=>{
-        // setLoggedIn(true);
-    }, []);
+        history.push('/');
+    }, [loggedIn]);
 
     function handleSearch(keyword) {
         setSearchKey(keyword);
     }
+    function handlelogIn() {
+        setLoggedIn(true);
+    }
+    function handlelogOut() {
+        setLoggedIn(false);
+    }
+    function handleSignInClick(){
+        onPopupClose();
+        setIsSignInPopupOpen(!isSignInPopupOpen);
+    }
+    function handleSignUpClick(){
+        onPopupClose();
+        setIsSignUpPopupOpen(!isSignUpPopupOpen);
+    }
+    function handleSuccessReg(){
+        onPopupClose();
+        setIsSuccessRegUpPopupOpen(!isSuccessRegUpPopupOpen);
+    }
+
+    function onPopupClose(){
+        setIsSignInPopupOpen(false);
+        setIsSignUpPopupOpen(false);
+        setIsSuccessRegUpPopupOpen(false);
+    }
+
+
+    function mobileMenuToggle() {
+        setActiveMenu(!activeMenu);
+    }
+
+    function mobileMenuDeactivate() {
+        {activeMenu && setActiveMenu(false)}
+    }
 
     return (
-        <div className="app">
+        <div className="app" onClick={mobileMenuDeactivate}>
             <Switch>
                 <Route exact path='/'>
                     <Header
                         nav={
-                            <Navigation loggedIn={loggedIn}/>
+                            <Navigation loggedIn={loggedIn}
+                                        handleSignInClick={handleSignInClick}
+                                        handleSignOutClick={handlelogOut}
+                                        mobileMenuToggle={mobileMenuToggle}
+                                        popUpOpened={isSignInPopupOpen || isSignUpPopupOpen || isSuccessRegUpPopupOpen}
+                                        activeMenu={activeMenu}/>
                         }
                         headerContent={
                             <SearchForm handleSearch={handleSearch}/>
@@ -84,15 +129,17 @@ function App() {
                     {
                         (searchKey !== '') ? <NewsCardList dataType="search" data={data} isLoading={true}/> : ''
                     }
-                    {
-                        console.log(searchKey)
-                    }
                     <About />
                 </Route>
                 <Route path='/saved-news'>
                     <Header
                         nav={
-                            <Navigation loggedIn={loggedIn} theme="light"/>
+                            <Navigation loggedIn={loggedIn}
+                                        handleSignOutClick={handlelogOut}
+                                        theme="light"
+                                        mobileMenuToggle={mobileMenuToggle}
+                                        popUpOpened={isSignInPopupOpen || isSignUpPopupOpen || isSuccessRegUpPopupOpen}
+                                        activeMenu={activeMenu}/>
                         }
                         headerContent={
                             <UserInfo />
@@ -102,7 +149,9 @@ function App() {
                 </Route>
             </Switch>
             <Footer />
-            <SignIn />
+            {isSignInPopupOpen && <SignIn isOpen={isSignInPopupOpen} onClose={onPopupClose} openSignUp={handleSignUpClick} openSuccess={handlelogIn}/>}
+            {isSignUpPopupOpen && <SignUp isOpen={isSignUpPopupOpen} onClose={onPopupClose} openSignUp={handleSignInClick} openSuccess={handleSuccessReg}/>}
+            {isSuccessRegUpPopupOpen && <SuccessReg name='successReg' isOpen={isSuccessRegUpPopupOpen} onClose={onPopupClose} signInClick={handleSignInClick}/>}
         </div>
     );
 }

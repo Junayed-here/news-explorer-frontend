@@ -1,6 +1,6 @@
 import React from 'react';
 
-function InputField(props) {
+function Input(props) {
     return (
         <>
             <input
@@ -12,15 +12,14 @@ function InputField(props) {
                 minLength={props.minLength}
                 maxLength={props.maxLength}
                 onChange={props.handleChange}
-                value={props.value}
-                required/>
+                onKeyUp={props.handleKeyUp}
+                ref={props.ref}
+                formNoValidate={true}/>
             <span
-                className="popup__input-error popup__input-error_active"
-                id={`${props.id}-error`}>
-                alsdsmfm dsfnksdn
-            </span>
+                className={`popup__input-error ${props.errors ? 'popup__input-error_active' : ''}`}>{props.errors}</span>
+
         </>
     );
 }
 
-export default InputField;
+export default Input;
