@@ -3,10 +3,12 @@ import {Route, Switch, useHistory} from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header';
 import Navigation from '../Navigation/Navigation';
+import Main from "../Main/Main";
 import About from '../About/About';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
 import NewsCardList from '../NewsCardList/NewsCardList';
+import SavedNews from '../SavedNews/SavedNews';
 import UserInfo from '../UserInfo/UserInfo';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
@@ -126,10 +128,12 @@ function App() {
                             <SearchForm handleSearch={handleSearch}/>
                         }>
                     </Header>
-                    {
-                        (searchKey !== '') ? <NewsCardList dataType="search" data={data} isLoading={true}/> : ''
-                    }
-                    <About />
+                    <Main>
+                        {
+                            (searchKey !== '') ? <NewsCardList dataType="search" data={data} isLoading={true}/> : ''
+                        }
+                        <About />
+                    </Main>
                 </Route>
                 <Route path='/saved-news'>
                     <Header
@@ -145,7 +149,9 @@ function App() {
                             <UserInfo />
                         }>
                     </Header>
-                    <NewsCardList dataType="saved" data={data} isLoading={false}/>
+                    <Main>
+                        <SavedNews data={data} isLoading={false}/>
+                    </Main>
                 </Route>
             </Switch>
             <Footer />

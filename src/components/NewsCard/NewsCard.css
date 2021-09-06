@@ -184,7 +184,7 @@
     background: #E8E8E8;
 }
 
-@media screen and (max-width:768px){
+@media screen and (max-width:991px){
     .card__image_box{
         height: 150px;
         overflow: hidden;

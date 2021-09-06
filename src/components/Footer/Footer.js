@@ -16,17 +16,17 @@ function App() {
                               <a href="/" className="footer__menu_link">Home</a>
                           </li>
                           <li className="footer__menu_item">
-                              <a href="/" className="footer__menu_link">Practicum by Yandex</a>
+                              <a target="_blank" href="https://practicum.yandex.com" className="footer__menu_link">Practicum by Yandex</a>
                           </li>
                       </ul>
                       <ul className="footer__social_links">
                           <li className="footer__social_link_item">
-                              <a href="/" className="footer__social_link">
+                              <a target="_blank" href="https://github.com/Yandex-Practicum" className="footer__social_link">
                                   <img src={githubIcon} alt="Github profile"/>
                               </a>
                           </li>
                           <li className="footer__social_link_item">
-                              <a href="/" className="footer__social_link">
+                              <a target="_blank" href="https://www.facebook.com/YPracticum" className="footer__social_link">
                                   <img src={facebookIcon} alt="Facebook profile"/>
                               </a>
                           </li>

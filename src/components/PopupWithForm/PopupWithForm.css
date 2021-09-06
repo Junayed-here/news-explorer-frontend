@@ -55,6 +55,7 @@
 }
 .popup__input:focus{
     outline: none;
+    border-bottom: 1px solid #000000;
 }
 
 .popup__input-invalid{
