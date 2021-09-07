@@ -1,0 +1,131 @@
+.header__form_box{
+    padding: 80px 15px;
+    padding-top: 168px;
+    max-width: 638px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.header__content_form_box{
+    background-image: url("../../images/header_BG.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.header__title{
+    font-family: 'Roboto Slab', serif;
+    color: #fff;
+    font-size: 60px;
+    line-height: 64px;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 32px;
+}
+
+.header__subtitle{
+    color: #fff;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    margin: 0;
+}
+
+.header__form{
+    margin-top: 88px;
+    display: block;
+}
+
+.header__form-input{
+    height: 64px;
+    width: 100%;
+    padding: 21px 175px 21px 24px;
+    color: #1A1B22;
+    border: 1px solid #D1D2D6;
+    box-sizing: border-box;
+    backdrop-filter: blur(8px);
+    border-radius: 100px;
+    transition: all .5s ease-in-out;
+}
+.header__form-input:focus{
+    outline: none;
+}
+
+.header__form-submit{
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    height: 64px;
+    max-width: 168px;
+    width: 99%;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    background: #2F71E5;
+    box-shadow: 0 5px 15px rgba(14, 26, 57, 0.2);
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    float: right;
+    margin-top: -64px;
+    position: relative;
+    z-index: 1;
+    transition: all .5s ease-in-out;
+}
+.header__form-submit:hover{
+    background: #347EFF;
+}
+.header__form-submit:focus{
+    background: #2A65CC;
+}
+
+
+@media screen and (max-width:768px){
+    .header__title{
+        font-size: 36px;
+        line-height: 40px;
+        margin-bottom: 16px;
+    }
+    .header__form_box{
+        max-width: 478px;
+        padding-top: 100px;
+        padding-bottom: 48px;
+    }
+    .header__form{
+        margin-top: 48px;
+    }
+    .header__form-input {
+        height: 48px;
+        width: 100%;
+        padding: 10px 175px 10px 24px;
+    }
+    .header__form-submit{
+        height: 48px;
+        max-width: 160px;
+        width: 100%;
+        padding: 10px;
+        margin-top: -48px;
+    }
+}
+
+@media screen and (max-width:425px){
+    .header__form-input {
+        height: 56px;
+        width: 100%;
+        padding: 17px 16px;
+    }
+    .header__form-submit{
+        height: 56px;
+        max-width: inherit;
+        width: 100%;
+        padding: 10px;
+        margin-top: 16px;
+        float: inherit;
+    }
+    .header__form_box{
+        padding-bottom: 32px;
+    }
+}
