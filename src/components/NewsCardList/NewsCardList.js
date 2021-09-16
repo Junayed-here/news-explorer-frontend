@@ -5,19 +5,43 @@ import NewsCard from "../NewsCard/NewsCard";
 import React from "react";
 
 function NewsCardList(props) {
-    const   {dataType, data, isLoading} = props;
+    const   {dataType, data, isLoading, handleSaveNews, loggedIn, signInClick,handleDeleteSaveNews} = props;
     const   dataCount = data.length;
-    const   [loading, setLoading] = React.useState(isLoading);
+    const   [newData, setNewData] = React.useState([]);
+    const   [dataLimit, setDataLimit] = React.useState(3);
 
-    setTimeout(() => {
-        setLoading(false);
-    }, 2000);
+    React.useEffect(()=>{
+        setDataLimit(3);
+    },[isLoading]);
+
+    React.useEffect(()=>{
+        setDataLimit(3);
+    },[data]);
+
+    React.useEffect(()=>{
+        setNewData([]);
+        if (dataCount>0){
+            for (let i=0; i<dataLimit; i++){
+                setNewData((newData)=> [...newData,data[i]]);
+            }
+        }
+    },[dataLimit,isLoading]);
+
+    function showMore(e) {
+        if (dataCount > (dataLimit+3)){
+            setDataLimit(dataLimit+3);
+            e.target.classList.remove('d-none')
+        }else{
+            setDataLimit(dataCount);
+            e.target.classList.add('d-none')
+        }
+    }
 
     return (
         <section className="cards_section">
             <div className="container">
                 {
-                    loading ?
+                    isLoading ?
                         <div className="loading">
                             <img src={loadingImg} className="loading__img" alt="Loading data"/>
                             <p className="loading__text">
@@ -37,22 +61,17 @@ function NewsCardList(props) {
                             </div>
                             :
                             <>
-                                {
-                                    (dataType === 'search') && <h2 className="cards_section_title">Search Result</h2>
-                                }
+                                <h2 className="cards_section_title">Search Result</h2>
                                 <div className="cards__list">
                                     {
-                                        data.map((item,index)=>(
-                                            <NewsCard card={item} dataType={dataType} key={index}/>
+                                        newData.map((item,index)=>(
+                                            <NewsCard card={item} dataType={dataType} key={index} handleSaveNews={handleSaveNews} loggedIn={loggedIn} signInClick={signInClick} handleDeleteSaveNews={handleDeleteSaveNews}/>
                                         ))
                                     }
                                 </div>
-                                {
-                                    (dataType === 'search') &&
-                                    <button className="card__show_more_button">
-                                        Show more
-                                    </button>
-                                }
+                                <button className="card__show_more_button" onClick={showMore}>
+                                    Show more
+                                </button>
                             </>
                 }
 

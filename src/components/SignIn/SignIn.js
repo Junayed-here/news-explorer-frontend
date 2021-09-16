@@ -9,6 +9,7 @@ function SignIn(props) {
     const [password, setPassword] = React.useState('');
     const [activeSubmit, setActiveSubmit] = React.useState(false);
     const [validationErrors, setValidationErrors] = React.useState({});
+    const {formError} = props;
 
     React.useEffect(()=>{
         setEmail('');
@@ -18,8 +19,8 @@ function SignIn(props) {
 
     React.useEffect(()=>{
         if (!validationErrors.email && !validationErrors.password && email !== '' && password !== ''){
-            props.openSuccess();
-            props.onClose();
+            props.onSubmit({email,password});
+            // props.onClose();
         }else{
             setActiveSubmit(false);
         }
@@ -56,6 +57,7 @@ function SignIn(props) {
             onClose={props.onClose}
             orTextClick={props.openSignUp}
             activeSubmit={activeSubmit}
+            formError={formError}
             orText='Sign up'>
             <label htmlFor="email" className="popup__label">Email</label>
             <Input

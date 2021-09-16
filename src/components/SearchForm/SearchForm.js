@@ -7,7 +7,6 @@ function SearchForm(props) {
 
     function handleKeywordChange(e) {
         setSearchKeyword(e.target.value);
-        handleSearch(e.target.value);
     }
 
     function handleSubmit(e) {
@@ -23,7 +22,7 @@ function SearchForm(props) {
                 <p className="header__subtitle">
                     Find the latest news on any topic and save them in your personal account.
                 </p>
-                <form className="header__form" action="/" onSubmit={handleSubmit}>
+                <form className="header__form" onSubmit={handleSubmit}>
                     <input type="text" className="header__form-input" placeholder="Enter topic" onChange={handleKeywordChange}/>
                     <button className="button button-role-submit header__form-submit">Search</button>
                 </form>

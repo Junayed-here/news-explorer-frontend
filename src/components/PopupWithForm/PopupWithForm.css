@@ -77,6 +77,9 @@
 .popup__input-error_active{
     opacity: 1;
 }
+.formError{
+    text-align: center;
+}
 
 .popup_tooltip_body{
     width: 430px;
@@ -104,6 +107,14 @@
     border-radius: 10px;
     padding: 35px;
     box-sizing: border-box;
+}
+
+.popup__form_fieldset{
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+    border: none;
+    outline: none;
 }
 
 .button_role_close{
@@ -139,7 +150,7 @@
     box-sizing: border-box;
     width: 100%;
     border: none;
-    margin-top: 40px;
+    margin-top: 10px;
     cursor: pointer;
 }
 

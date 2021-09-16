@@ -1,25 +1,21 @@
-import logo from '../../logo.svg';
-import './App.fonts';
+import './Preloader.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function Preloader(props) {
+    const {preloaderState} = props;
+    preloaderState ? document.body.classList.add('fullScreen'):document.body.classList.remove('fullScreen');
+
+    return (
+        <>
+            {
+                preloaderState &&
+
+                <div className="preloader_wrap">
+                    <i className="circle-preloader"></i>
+                </div>
+            }
+        </>
+
+    );
 }
 
-export default App;
+export default Preloader;
