@@ -5,7 +5,7 @@ import {NavLink} from "react-router-dom";
 import React from "react";
 
 function Navigation(props) {
-    const {loggedIn,theme,handleSignInClick,handleSignOutClick,activeMenu,mobileMenuToggle,popUpOpened} = props;
+    const {loggedIn,theme,handleSignInClick,handleSignOutClick,activeMenu,mobileMenuToggle,popUpOpened,userName} = props;
 
     function signIn(){
         handleSignInClick();
@@ -32,7 +32,7 @@ function Navigation(props) {
                                     </li>
                                 </ul>
                                 <button className="button nav__signOut_button" onClick={handleSignOutClick}>
-                                    Elise
+                                    {userName}
                                     {
                                         (theme == 'light' && !activeMenu) ?
                                             <img className="nav__signOut_button_icon" src={logoutBlack } alt="logout"/>

@@ -13,75 +13,187 @@ import UserInfo from '../UserInfo/UserInfo';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 import SuccessReg from '../SuccessReg/SuccessReg';
-import cardImg_1 from "../../images/cards_1.jpg";
-import cardImg_2 from "../../images/cards_2.jpg";
-import cardImg_3 from "../../images/cards_3.jpg";
-import cardImg_4 from "../../images/cards_4.jpg";
-import cardImg_5 from "../../images/cards_5.jpg";
+import CurrentUserContext from '../../context/CurrentUserContext'
+import * as auth from "../../utils/auth";
+import MainApi from "../../utils/MainApi";
+import {searchNews} from "../../utils/NewsApi";
+import { MAIN_URL } from '../../utils/config.json';
+import ProtectedRoute from "../../utils/ProtectedRoute";
+import Preloader from "../Preloader/Preloader";
 
-const data = [
-    {
-        'title': 'Everyone Needs a Special \'Sit Spot\' in Nature',
-        'image': cardImg_1,
-        'text': 'Ever since I read Richard Louv\'s influential book, "Last Child in the Woods," the idea of having a special "sit spot" has stuck with me. This advice, which Louv attributes to nature educator Jon Young, is for both adults and children to find...',
-        'date': 'November 4, 2020',
-        'source': 'Treehugger',
-        'tag': 'Nature'
-    },
-    {
-        'title': 'Nature makes you better',
-        'image': cardImg_2,
-        'text': 'We all know how good nature can make us feel. We have known it for millennia: the sound of the ocean, the scents of a forest, the way dappled sunlight dances through leaves.',
-        'date': 'February 19, 2019',
-        'source': 'National Geographic',
-        'tag': 'Nature'
-    },
-    {
-        'title': 'Nostalgic Photos of Tourists in U.S. National Parks',
-        'image': cardImg_3,
-        'text': 'Uri Løvevild Golman and Helle Løvevild Golman are National Geographic Explorers and conservation photographers who just completed a project and book they call their love letter to...',
-        'date': 'October 19, 2020',
-        'source': 'National Geographic',
-        'tag': 'Yellowstone'
-    },
-    {
-        'title': 'Grand Teton Renews Historic Crest Trail',
-        'image': cardImg_4,
-        'text': '“The linking together of the Cascade and Death Canyon trails, at their heads, took place on October 1, 1933, and marked the first step in the realization of a plan whereby the hiker will be...',
-        'date': 'November 4, 2020',
-        'source': 'National parks traveler',
-        'tag': 'Parks'
-    },
-    {
-        'title': 'Scientists Don\'t Know Why Polaris Is So Weird ',
-        'image': cardImg_5,
-        'text': 'Humans have long relied on the starry sky to push into new frontiers, sail to the very edge of the world and find their way back home again. Even animals look to the stars to guide them. ',
-        'date': 'March 16, 2020',
-        'source': 'treehugger',
-        'tag': 'Photography'
-    }
-];
 function App() {
     const   history = useHistory();
+    const   [preloader, setPreloader] = React.useState(true);
+    const   [token, setToken] = React.useState(localStorage.getItem('jwt'));
+    const   [currentUser, setCurrentUser] = React.useState({});
     const   [loggedIn, setLoggedIn] = React.useState(false);
+    const   [searchLoading, setSearchLoading] = React.useState(true);
     const   [searchKey, setSearchKey] = React.useState('');
     const   [isSignInPopupOpen, setIsSignInPopupOpen] = React.useState(false);
     const   [isSignUpPopupOpen, setIsSignUpPopupOpen] = React.useState(false);
     const   [isSuccessRegUpPopupOpen, setIsSuccessRegUpPopupOpen] = React.useState(false);
     const   [activeMenu, setActiveMenu] = React.useState(false);
+    const   [searchResult, setSearchResult] = React.useState([]);
+    const   [savedNews, setSavedNews] = React.useState([]);
+    const   [sortedSavedNews, setSortedSavedNews] = React.useState([]);
+    const   [dataCount, setDataCount] = React.useState(0);
+    const   [keywordsText, setKeywordsText] = React.useState('');
+    const   [formError, setFormError] = React.useState('');
+    const   api = new MainApi({
+        baseUrl: MAIN_URL,
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${token}`,
+        },
+    });
 
     React.useEffect(()=>{
-        history.push('/');
-    }, [loggedIn]);
+        if (token){
+            auth.validation(token)
+                .then((res)=>{
+                    if (res){
+                        setCurrentUser(res);
+                        setLoggedIn(true);
+                    }else{
+                        history.push('/');
+                    }
+                    setPreloader(false);
+                })
+                .catch((err) => console.log(err));
+        }else{
+            setPreloader(false);
+        }
+    },[token]);
+
+    React.useEffect(()=>{
+        if (currentUser._id !== undefined){
+            getSavedNews();
+        }
+    },[currentUser])
+
+    React.useEffect(()=>{
+        if (savedNews.length > 0){
+            sortSavedData(savedNews);
+            searchResultMatching(searchResult);
+        }
+    },[savedNews]);
 
     function handleSearch(keyword) {
+        setSearchLoading(true);
         setSearchKey(keyword);
+        searchNews(keyword).then((res)=> {
+            if (res.articles.length > 0){
+                searchResultMatching(res.articles);
+                setSearchLoading(false);
+            }
+
+        })
+            .catch(err => console.log(err));
     }
-    function handlelogIn() {
-        setLoggedIn(true);
+    function handleLogIn(user) {
+        auth.authorization(user).then((res)=> {
+            if (res.errorMassage){
+                setCurrentUser({});
+                setLoggedIn(false);
+                setFormError(res.errorMassage);
+            }else {
+                localStorage.setItem("jwt", res.token);
+                setToken(res.token);
+                onPopupClose();
+            }
+        })
+            .catch(err => console.log(err));
     }
-    function handlelogOut() {
+    function handleSignUp(user) {
+        auth.register(user).then((res)=> {
+            if (res.errorMassage){
+                setFormError(res.errorMassage);
+            }else{
+                handleSuccessReg();
+            }
+        }).catch(err => console.log(err));
+    }
+    function handleSaveNews(data) {
+        api.saveNews({...data, keyword: searchKey}).then((res) => {
+            getSavedNews()
+        }).catch(err => console.log(err));
+    }
+    function sortSavedData(data) {
+        const   keywords = [];
+        const   keywordsUnique = {};
+        setDataCount(data.length);
+        data.map((item)=>{
+            keywords.push(item.keyword);
+        });
+
+        keywords.forEach(function (x) { keywordsUnique[x] = (keywordsUnique[x] || 0) + 1; });
+        const keywordsUniqueSorted = Object.keys(keywordsUnique).sort(function(a,b){return keywordsUnique[b]-keywordsUnique[a]});
+
+        const sortData = (arr1, arr2) => {
+            arr2.sort((a, b) => {
+                const aKey = Object.values(a)[1];
+                const bKey = Object.values(b)[1];
+                return arr1.indexOf(aKey) - arr1.indexOf(bKey);
+            });
+        };
+
+        sortData(keywordsUniqueSorted,data);
+        setSortedSavedNews(data);
+
+        if (Object.keys(keywordsUniqueSorted).length > 3){
+            setKeywordsText(`${Object.values(keywordsUniqueSorted)[0]}, ${Object.values(keywordsUniqueSorted)[1]} and ${Object.values(keywordsUniqueSorted).length - 2} others.`);
+        }else if(Object.keys(keywordsUniqueSorted).length === 3){
+            setKeywordsText(`${Object.values(keywordsUniqueSorted)[0]}, ${Object.values(keywordsUniqueSorted)[1]} and ${Object.values(keywordsUniqueSorted)[2]}.`);
+        }else if(Object.values(keywordsUniqueSorted).length === 2){
+            setKeywordsText(`${Object.values(keywordsUniqueSorted)[0]} and ${Object.values(keywordsUniqueSorted)[1]}.`);
+        }else if(Object.keys(keywordsUniqueSorted).length === 1){
+            setKeywordsText(`${Object.values(keywordsUniqueSorted)[0]}.`);
+        }else if(Object.values(keywordsUniqueSorted).length < 1){
+            setKeywordsText(`N/A`);
+        }
+    }
+    function searchResultMatching(data) {
+        let readyData = [];
+        data.map((item)=>{
+            const singleData = new Object();
+            singleData.title = item.title;
+            singleData.urlToImage = item.urlToImage;
+            singleData.description = item.description;
+            singleData.publishedAt = item.publishedAt;
+            singleData.url = item.url;
+            singleData.source = (item.source !== null) ? ((item.source.name !== undefined) ? item.source.name:item.source) : "Unknown";
+            singleData.keyword = searchKey;
+            if (loggedIn){
+                for (let i=0; i<sortedSavedNews.length;i++){
+                    if (item.title === sortedSavedNews[i].title && item.description === sortedSavedNews[i].text){
+                        singleData.id = sortedSavedNews[i]._id;
+                        break;
+                    }
+                }
+            }
+            readyData.push(singleData);
+        });
+        setSearchResult(readyData);
+    }
+    function onSignOut() {
+        localStorage.removeItem('jwt');
         setLoggedIn(false);
+        setCurrentUser({});
+        setToken('');
+    }
+    function getSavedNews() {
+        api.getSavedNews().then(res => {
+            setSavedNews('');
+            if (res){
+                const match = []
+                res.map((item)=>{
+                    if (item.owner === currentUser._id){
+                        match.push(item);
+                    }
+                });
+                setSavedNews(match);
+            }
+        });
     }
     function handleSignInClick(){
         onPopupClose();
@@ -95,70 +207,77 @@ function App() {
         onPopupClose();
         setIsSuccessRegUpPopupOpen(!isSuccessRegUpPopupOpen);
     }
-
     function onPopupClose(){
         setIsSignInPopupOpen(false);
         setIsSignUpPopupOpen(false);
         setIsSuccessRegUpPopupOpen(false);
+        setFormError('');
     }
-
-
     function mobileMenuToggle() {
         setActiveMenu(!activeMenu);
     }
-
     function mobileMenuDeactivate() {
         {activeMenu && setActiveMenu(false)}
     }
+    function handleDeleteSaveNews(id) {
+        api.deleteSavedNews(id).then(async (res) => {
+            await getSavedNews();
+        });
+    }
 
     return (
-        <div className="app" onClick={mobileMenuDeactivate}>
-            <Switch>
-                <Route exact path='/'>
-                    <Header
-                        nav={
-                            <Navigation loggedIn={loggedIn}
-                                        handleSignInClick={handleSignInClick}
-                                        handleSignOutClick={handlelogOut}
-                                        mobileMenuToggle={mobileMenuToggle}
-                                        popUpOpened={isSignInPopupOpen || isSignUpPopupOpen || isSuccessRegUpPopupOpen}
-                                        activeMenu={activeMenu}/>
-                        }
-                        headerContent={
-                            <SearchForm handleSearch={handleSearch}/>
-                        }>
-                    </Header>
-                    <Main>
-                        {
-                            (searchKey !== '') ? <NewsCardList dataType="search" data={data} isLoading={true}/> : ''
-                        }
-                        <About />
-                    </Main>
-                </Route>
-                <Route path='/saved-news'>
-                    <Header
-                        nav={
-                            <Navigation loggedIn={loggedIn}
-                                        handleSignOutClick={handlelogOut}
-                                        theme="light"
-                                        mobileMenuToggle={mobileMenuToggle}
-                                        popUpOpened={isSignInPopupOpen || isSignUpPopupOpen || isSuccessRegUpPopupOpen}
-                                        activeMenu={activeMenu}/>
-                        }
-                        headerContent={
-                            <UserInfo />
-                        }>
-                    </Header>
-                    <Main>
-                        <SavedNews data={data} isLoading={false}/>
-                    </Main>
-                </Route>
-            </Switch>
-            <Footer />
-            {isSignInPopupOpen && <SignIn isOpen={isSignInPopupOpen} onClose={onPopupClose} openSignUp={handleSignUpClick} openSuccess={handlelogIn}/>}
-            {isSignUpPopupOpen && <SignUp isOpen={isSignUpPopupOpen} onClose={onPopupClose} openSignUp={handleSignInClick} openSuccess={handleSuccessReg}/>}
-            {isSuccessRegUpPopupOpen && <SuccessReg name='successReg' isOpen={isSuccessRegUpPopupOpen} onClose={onPopupClose} signInClick={handleSignInClick}/>}
-        </div>
+        <CurrentUserContext.Provider value={currentUser}>
+            <div className="app" onClick={mobileMenuDeactivate}>
+                <Preloader preloaderState={preloader}/>
+                <Switch>
+                    <Route exact path='/'>
+                        <Header
+                            nav={
+                                <Navigation loggedIn={loggedIn}
+                                            handleSignInClick={handleSignInClick}
+                                            handleSignOutClick={onSignOut}
+                                            mobileMenuToggle={mobileMenuToggle}
+                                            userName={currentUser.name}
+                                            popUpOpened={isSignInPopupOpen || isSignUpPopupOpen || isSuccessRegUpPopupOpen}
+                                            activeMenu={activeMenu}/>
+                            }
+                            headerContent={
+                                <SearchForm handleSearch={handleSearch}/>
+                            }>
+                        </Header>
+                        <Main>
+                            {
+                                (searchKey !== '') ? <NewsCardList data={searchResult} isLoading={searchLoading} handleDeleteSaveNews={handleDeleteSaveNews} handleSaveNews={handleSaveNews} loggedIn={loggedIn} signInClick={handleSignInClick}/> : ''
+                            }
+                            <About />
+                        </Main>
+                    </Route>
+                    <ProtectedRoute path='/saved-news' loggedIn={loggedIn}>
+                        <Header
+                            nav={
+                                <Navigation loggedIn
+                                            handleSignOutClick={onSignOut}
+                                            theme="light"
+                                            userName={currentUser.name}
+                                            mobileMenuToggle={mobileMenuToggle}
+                                            popUpOpened={isSignInPopupOpen || isSignUpPopupOpen || isSuccessRegUpPopupOpen}
+                                            activeMenu={activeMenu}/>
+                            }
+                            headerContent={
+                                <UserInfo dataCount={dataCount} keywordsText={keywordsText} currentUser={currentUser}/>
+                            }>
+                        </Header>
+                        <Main>
+                            <SavedNews data={sortedSavedNews} handleDeleteSaveNews={handleDeleteSaveNews}/>
+                        </Main>
+                    </ProtectedRoute>
+                </Switch>
+                <Footer />
+                {isSignInPopupOpen && <SignIn isOpen={isSignInPopupOpen} onClose={onPopupClose} openSignUp={handleSignUpClick} onSubmit={handleLogIn} formError={formError}/>}
+                {isSignUpPopupOpen && <SignUp isOpen={isSignUpPopupOpen} onClose={onPopupClose} openSignUp={handleSignInClick} onSubmit={handleSignUp} formError={formError}/>}
+                {isSuccessRegUpPopupOpen && <SuccessReg name='successReg' isOpen={isSuccessRegUpPopupOpen} onClose={onPopupClose} signInClick={handleSignInClick}/>}
+            </div>
+        </CurrentUserContext.Provider>
     );
 }
 

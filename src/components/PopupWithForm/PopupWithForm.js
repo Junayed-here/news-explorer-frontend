@@ -3,8 +3,9 @@ import './PopupWithForm.css'
 
 function PopupWithForm(props) {
     const isOpen = props.isOpen ? 'popup_show' : '';
-
     const isActive = props.activeSubmit ? 'active' : '';
+    const isError = props.formError ? 'popup__input-error_active' : '';
+
     React.useEffect(()=>{
         const popup = document.querySelector('.popup');
         popup.addEventListener("click", (e) => {
@@ -25,7 +26,10 @@ function PopupWithForm(props) {
                 <button className="button button_role_close"></button>
                 <h3 className="popup__title">{props.title}</h3>
                 <form action="#" className="popup__form popup__edit-form" name={`${props.name}`}  onSubmit={props.onSubmit}>
-                    {props.children}
+                    <fieldset className="popup__form_fieldset">
+                        {props.children}
+                    </fieldset>
+                    <span className={`popup__input-error formError ${isError}`}>{props.formError}</span>
                     <button className={`button button_role_submit popup__submit_button ` + isActive} disabled={!props.activeSubmit} type="submit">{props.submitButtonText}</button>
                 </form>
                 <p className="popup__or_text">or <span className="popup__or_link" onClick={props.orTextClick}>{props.orText}</span></p>

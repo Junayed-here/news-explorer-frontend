@@ -13,6 +13,7 @@
 .card__image_box{
     height: 272px;
     position: relative;
+    overflow: hidden;
 }
 
 .card__image{
@@ -182,6 +183,10 @@
 }
 .card__show_more_button:hover{
     background: #E8E8E8;
+}
+
+.card__show_more_button.d-none{
+    display: none;
 }
 
 @media screen and (max-width:991px){
