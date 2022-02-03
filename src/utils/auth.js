@@ -1,4 +1,4 @@
-import { MAIN_URL } from '../utils/config.json';
+import MAIN_URL from '../utils/config.json';
 
 export const register = (user) => {
     return fetch(`${MAIN_URL}/api/signup`, {

@@ -17,7 +17,7 @@ import CurrentUserContext from '../../context/CurrentUserContext'
 import * as auth from "../../utils/auth";
 import MainApi from "../../utils/MainApi";
 import {searchNews} from "../../utils/NewsApi";
-import { MAIN_URL } from '../../utils/config.json';
+import MAIN_URL from '../../utils/config.json';
 import ProtectedRoute from "../../utils/ProtectedRoute";
 import Preloader from "../Preloader/Preloader";
 
