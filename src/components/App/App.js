@@ -17,7 +17,7 @@ import CurrentUserContext from '../../context/CurrentUserContext'
 import * as auth from "../../utils/auth";
 import MainApi from "../../utils/MainApi";
 import {searchNews} from "../../utils/NewsApi";
-import MAIN_URL from '../../utils/config.json';
+import config from '../../utils/config.json';
 import ProtectedRoute from "../../utils/ProtectedRoute";
 import Preloader from "../Preloader/Preloader";
 
@@ -40,7 +40,7 @@ function App() {
     const   [keywordsText, setKeywordsText] = React.useState('');
     const   [formError, setFormError] = React.useState('');
     const   api = new MainApi({
-        baseUrl: MAIN_URL,
+        baseUrl: config.MAIN_URL,
         headers: {
             'Content-Type': 'application/json',
             'authorization': `Bearer ${token}`,

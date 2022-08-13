@@ -7,10 +7,10 @@ import {BrowserRouter} from 'react-router-dom';
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
+        {/*            basename={"/projects/newsFullProject/"}       */}
+        <BrowserRouter basename={"/news-explorer-frontend/"}>
             <App />
         </BrowserRouter>
-
     </React.StrictMode>,
     document.getElementById('root')
 );
