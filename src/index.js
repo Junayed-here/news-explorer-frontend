@@ -8,7 +8,8 @@ import {BrowserRouter} from 'react-router-dom';
 ReactDOM.render(
     <React.StrictMode>
         {/*            basename={"/projects/newsFullProject/"}       */}
-        <BrowserRouter basename={"/news-explorer-frontend/"}>
+        {/*            basename={"/news-explorer-frontend/"}       */}
+        <BrowserRouter>
             <App />
         </BrowserRouter>
     </React.StrictMode>,
