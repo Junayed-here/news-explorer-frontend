@@ -1,7 +1,7 @@
-import { MAIN_URL } from '../utils/config.json';
+import config from '../utils/config.json';
 
 export const register = (user) => {
-    return fetch(`${MAIN_URL}/api/signup`, {
+    return fetch(`${config.MAIN_URL}/api/signup`, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -24,7 +24,7 @@ export const register = (user) => {
 };
 
 export const authorization  = (user) => {
-    return fetch(`${MAIN_URL}/api/signin`, {
+    return fetch(`${config.MAIN_URL}/api/signin`, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -47,7 +47,7 @@ export const authorization  = (user) => {
 };
 
 export const validation = (jwt) => {
-    return fetch(`${MAIN_URL}/api/users/me`, {
+    return fetch(`${config.MAIN_URL}/api/users/me`, {
         method: "GET",
         headers: {
             'Accept': 'application/json',

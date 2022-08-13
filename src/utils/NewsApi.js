@@ -1,4 +1,4 @@
-import { NEWS_URL, API_KEY } from '../utils/config.json';
+import API_KEY from '../utils/config.json';
 import moment from 'moment';
 const BASE_URL = "https://newsapi.org/v2/everything";
 
